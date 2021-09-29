@@ -17,31 +17,24 @@ const useStyles = makeStyles({
 
 export default function DenseTable(props) {
   const classes = useStyles();
-
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
-            <TableCell>idUsuario</TableCell>
-            <TableCell align="right">EstadoPago</TableCell>
-            <TableCell align="right">MontoPago</TableCell>
-            <TableCell align="right">PagoDeadline</TableCell>
-            <TableCell align="right">Monto cuota individual</TableCell>
+            <TableCell>pagoState</TableCell>
+            <TableCell align="right">pagoPaid</TableCell>
+            <TableCell align="right">pagoDeadline</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {props.data.map(row => (
             <TableRow key={row.idUsuario}>
               <TableCell component="th" scope="row">
-                {row.idUsuario}
+                {row.pagoState}
               </TableCell>
-              <TableCell align="right">{row.EstadoPago}</TableCell>
-              <TableCell align="right">{row.MontoPago}</TableCell>
-              <TableCell align="right">{row.PagoDeadline}</TableCell>
-              <TableCell align="right">
-                {row['Monto cuota individual']}
-              </TableCell>
+              <TableCell align="right">{row.pagoPaid}</TableCell>
+              <TableCell align="right">{row.pagoDeadline}</TableCell>
             </TableRow>
           ))}
         </TableBody>

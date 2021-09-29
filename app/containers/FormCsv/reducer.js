@@ -8,7 +8,8 @@ import * as constants from './constants';
 
 export const initialState = {
   isLoading: false,
-  events: {},
+  events: [],
+  analytics: {},
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -26,6 +27,10 @@ const formCsvReducer = (state = initialState, action) =>
         break;
       case constants.GET_CVS_SUCCESS:
         draft.events = action.response;
+        break;
+      case constants.GET_ANALYTICS_SUCCESS:
+        draft.analytics = action.response;
+        break;
     }
   });
 

@@ -93,16 +93,6 @@ export class Dashboard extends React.Component {
     openedSections: [],
   };
 
-  componentWillMount() {}
-
-  handleOptionChange = data => {
-    if (data.checkedA === false) {
-      this.props.check();
-    } else {
-      this.props.checkF();
-    }
-  };
-
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
@@ -116,10 +106,6 @@ export class Dashboard extends React.Component {
       newOpenedSections = newOpenedSections.filter(el => section !== el);
     }
     this.setState({ openedSections: newOpenedSections });
-  };
-
-  handleExport = payload => {
-    this.props.exportCsv(payload);
   };
 
   componentDidUpdate = prevProps => {
@@ -146,7 +132,7 @@ export class Dashboard extends React.Component {
         subsections: [
           {
             key: 'employees',
-            title: 'Calcular CSV',
+            title: 'Tabla de usuarios',
             component: () => <FormCsv history={this.props.history} />,
           },
         ],
@@ -263,21 +249,9 @@ Dashboard.propTypes = {
   dispatch: PropTypes.func.isRequired,
   calculateClv: PropTypes.func.isRequired,
   recalculateClv: PropTypes.func.isRequired,
-  dashboard: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
-  report: PropTypes.object.isRequired,
-  datePicker: PropTypes.object.isRequired,
-  checkProcessStatusChange: PropTypes.func,
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-  exportCsv: PropTypes.func,
-  exportCustomMails: PropTypes.func,
   match: PropTypes.object,
-  check: PropTypes.func,
-  checkF: PropTypes.func,
-  checkCompanyAccess: PropTypes.func,
-  checkSummariesStatus: PropTypes.func,
-  getTrackerStatus: PropTypes.func,
   formcsv: PropTypes.object,
   history: PropTypes.object,
 };

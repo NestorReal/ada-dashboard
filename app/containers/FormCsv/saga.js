@@ -1,49 +1,115 @@
 import request from 'utils/request';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import auth from 'utils/auth';
-import {
-  addErrorMessage,
-  addSuccessMessage,
-} from 'containers/Notifications/actions';
 import * as constants from './constants';
+import { getCsv } from './actions';
 
 // Individual exports for testing
 export default function* gradeSaga() {
   yield takeLatest(constants.GET_CVS_INIT, saveCsvSaga);
+  yield takeLatest(constants.GET_ANALYTICS_INIT, getAnalyticsSaga);
+  yield takeLatest(constants.SAVE_NUMBER_INIT, saveNumberSaga);
+  yield takeLatest(constants.GET_CHECK_INIT, checkSaga);
 }
 
-export function* saveCsvSaga(action) {
+export function* saveNumberSaga(action) {
+  const body = {
+    'phoneNumber': action.number,
+  };
+  try {
+    const requestURL = `https://app.progresemosdashboard.com/api/v1/dashboard/updatePhoneNumberUser/${action.user.toString()}`;
+    const response = yield call(request, requestURL, {
+      method: 'PUT',
+      headers: {
+        'x-access-token': `${auth.getToken()}`,
+        Accept: '*/*',
+      },
+      body: JSON.stringify(body),
+    });
+    if (response) {
+      yield put(getCsv());
+    }
+  } catch (error) {
+    yield put({
+      type: constants.SAVE_NUMBER_FAILED,
+    });
+  }
+}
+
+export function* checkSaga(action) {
+  const body = {
+    reviewed: action.value,
+  };
+  try {
+    const requestURL = `https://app.progresemosdashboard.com/api/v1/dashboard/checkReviewed/${action.user.toString()}`;
+    const response = yield call(request, requestURL, {
+      method: 'PUT',
+      headers: {
+        'x-access-token': `${auth.getToken()}`,
+        Accept: '*/*',
+      },
+      body: JSON.stringify(body),
+    });
+    if (response) {
+      yield put(getCsv());
+    }
+  } catch (error) {
+    yield put({
+      type: constants.SAVE_NUMBER_FAILED,
+    });
+  }
+}
+
+export function* saveCsvSaga() {
   yield put({
     type: constants.DATA_RETRIEVE_INIT,
   });
-  const file = action.cvs;
-  const formData = new FormData();
-  formData.append(`file`, file);
   try {
-    const requestURL = `https://convertidor.progresemosdashboard.com/api/v1/upload`;
+    const requestURL = `https://app.progresemosdashboard.com/api/v1/dashboard/listUsers`;
     /* eslint-disable react/prefer-stateless-function */
     const response = yield call(request, requestURL, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'x-access-token': `${auth.getToken()}`,
         Accept: 'multipart/form-data',
       },
-      body: formData,
     });
     if (response) {
       yield put({
         type: constants.GET_CVS_SUCCESS,
         response,
       });
-      yield put(addSuccessMessage(`Se guardo correctamente el fichero`));
     }
   } catch (error) {
     yield put({
       type: constants.GET_CVS_FAILED,
     });
-    yield put(addErrorMessage(`Error al guardar el fichero`));
   }
   yield put({
     type: constants.DATA_RETRIEVE_END,
   });
+}
+
+export function* getAnalyticsSaga() {
+  try {
+    const requestURL = `https://app.progresemosdashboard.com/api/v1/dashboard/analytics`;
+    /* eslint-disable react/prefer-stateless-function */
+    const response = yield call(request, requestURL, {
+      method: 'GET',
+      headers: {
+        'x-access-token': `${auth.getToken()}`,
+        Accept: 'multipart/form-data',
+      },
+    });
+    if (response) {
+      yield put({
+        type: constants.GET_ANALYTICS_SUCCESS,
+        response,
+      });
+    }
+  } catch (error) {
+    yield put({
+      type: constants.GET_ANALYTICS_FAILED,
+    });
+  }
 }
