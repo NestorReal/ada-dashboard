@@ -14,7 +14,7 @@ export default function* gradeSaga() {
 
 export function* saveNumberSaga(action) {
   const body = {
-    'phoneNumber': action.number,
+    phoneNumber: action.number,
   };
   try {
     const requestURL = `https://app.progresemosdashboard.com/api/v1/dashboard/updatePhoneNumberUser/${action.user.toString()}`;
@@ -22,7 +22,8 @@ export function* saveNumberSaga(action) {
       method: 'PUT',
       headers: {
         'x-access-token': `${auth.getToken()}`,
-        Accept: '*/*',
+        Accept: 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
       },
       body: JSON.stringify(body),
     });
@@ -38,7 +39,7 @@ export function* saveNumberSaga(action) {
 
 export function* checkSaga(action) {
   const body = {
-    reviewed: action.value,
+    reviewed: !action.value,
   };
   try {
     const requestURL = `https://app.progresemosdashboard.com/api/v1/dashboard/checkReviewed/${action.user.toString()}`;
@@ -46,7 +47,8 @@ export function* checkSaga(action) {
       method: 'PUT',
       headers: {
         'x-access-token': `${auth.getToken()}`,
-        Accept: '*/*',
+        Accept: 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
       },
       body: JSON.stringify(body),
     });
