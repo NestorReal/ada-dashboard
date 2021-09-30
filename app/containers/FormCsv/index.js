@@ -36,7 +36,7 @@ export function FormCsv(props) {
 
   let table  = null;
   if(Object.keys(props.formCsv.events).length !== 0){
-    const dataComplete = props.formCsv.events.data.map(dataInfo => Object.assign(dataInfo.data, {idUser: dataInfo.id})).filter(data => moment(data.created_at).diff(moment('2021-09-28')) >= 1  );
+    const dataComplete = props.formCsv.events.data.map(dataInfo => Object.assign(dataInfo.data, {idUser: dataInfo.id})).filter(data => moment(data.created_at).diff(moment('2021-09-28')) >= 1 && data.idUser !== '1' && data.idUser !== '11');
     const dataAnalytics = props.formCsv.analytics.data.map(analyticsInfo => analyticsInfo.data);
     table = 
       <Table 
